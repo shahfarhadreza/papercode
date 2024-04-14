@@ -21,7 +21,7 @@ Tired of bloated IDEs that slow you down? Welcome to Paper Code, the lightning-f
 
 # Download
 
-See Release - (https://github.com/shahfarhadreza/papercode/releases/tag/beta-build-11pm-14-april-2024)
+See Release - https://github.com/shahfarhadreza/papercode/releases/tag/beta-build-11pm-14-april-2024
 
 # How to Build
 
