@@ -1,0 +1,12 @@
+[submodule "vendors/stb"]
+	path = vendors/stb
+	url = https://github.com/nothings/stb.git
+[submodule "vendors/glfw"]
+	path = vendors/glfw
+	url = https://github.com/glfw/glfw.git
+[submodule "vendors/yaml-cpp"]
+	path = vendors/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "vendors/imgui"]
+	path = vendors/imgui
+	url = https://github.com/ocornut/imgui.git
