@@ -185,6 +185,8 @@ void UISystem::appendBuildLog(const std::string& log, LogType type) {
 void UISystem::drawToolbar() {
     ImVec2 toolBtnSize = ImVec2(40, 36);
 
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 
     if (ImGui::Button(ICON_FA_FILE, toolBtnSize)) {
@@ -255,6 +257,7 @@ void UISystem::drawToolbar() {
     }
     ImGui_QuickTooltip("Preferences", mDefaultFontGUI);
 
+    ImGui::PopStyleColor();
     ImGui::PopStyleColor();
 }
 
@@ -341,6 +344,12 @@ void UISystem::drawUI() {
     // Status Bar
     if (mShowStatus) {
         ImGui::Begin("Status");
+
+        if (PaperCode::get().isBuilding()) {
+            ImGui::Text("%s", "Building...");
+        } else {
+            ImGui::Text("%s", "Ready");
+        }
 
         ImGui::End();
     }
