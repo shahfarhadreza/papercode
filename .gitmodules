@@ -7,6 +7,3 @@
 [submodule "vendors/yaml-cpp"]
 	path = vendors/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp.git
-[submodule "vendors/imgui"]
-	path = vendors/imgui
-	url = https://github.com/ocornut/imgui.git
