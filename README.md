@@ -1,6 +1,8 @@
 # Paper Code
 Tired of bloated IDEs that slow you down? Welcome to Paper Code, the lightning-fast C++ IDE built for performance-obsessed developers.
 
+![preview](screenshots/01.png) ![preview](screenshots/02.png)
+
 # Focus on Performance
 
 * Lightweight Design: Built with a focus on minimal resource usage, ensuring smooth operation even on older or less powerful machines.
@@ -41,7 +43,7 @@ The command you'll need to run depends on the generator you chose earlier. For e
 
 3. **Run**
 
-After the building process completes, you will see a bin folder in the root where you can find the executable to run. 
+After the building process completes, you will find the executable in the bin folder to run. 
 
 # Dependencies
 
