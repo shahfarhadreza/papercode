@@ -16,8 +16,8 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightni
 * Project Management:
   - Ability to create and manage C++ projects with multiple files.
 * Other Features:
-  - A customizable interface to suit different preferences.
-  - Support for cross-platform development (if applicable).
+  - A customizable interface to suit different preferences (Work-in progress).
+  - Support for cross-platform development (Work-in progress).
 
 # Download
 
