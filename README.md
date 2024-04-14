@@ -19,6 +19,10 @@ Tired of bloated IDEs that slow you down? Welcome to Paper Code, the lightning-f
   - A customizable interface to suit different preferences.
   - Support for cross-platform development (if applicable).
 
+# Download
+
+See Release - (https://github.com/shahfarhadreza/papercode/releases/tag/beta-build-11pm-14-april-2024)
+
 # How to Build
 
 **Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding. The basic steps to build are:
