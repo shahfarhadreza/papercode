@@ -25,9 +25,13 @@ See Release - https://github.com/shahfarhadreza/papercode/releases/tag/beta-buil
 
 # How to Build
 
-**Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding. The basic steps to build are:
+**Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding.
 
 **Note:** If you don't use the provided installer for your platform, make sure that you add CMake's bin folder to your path.
+
+C++ Version Required: C++23 Or Higher
+
+The basic steps to build are:
 
 1. **Generate**
 
