@@ -112,16 +112,21 @@ bool ImGui_LinkButton(const std::string& text, const std::string& tooltip) {
 void ImGuiSetTheme()  {
     ImGuiStyle& style = ImGui::GetStyle();
 
-    style.WindowRounding = 0.0f;
-	style.TabRounding = 0.0f;
-	style.WindowBorderSize = 0;
+    style.WindowMenuButtonPosition = 0;
+    style.WindowPadding.x = 5;
+    style.WindowRounding = 3.0f;
+	style.WindowBorderSize = 1;
+
+    style.TabRounding = 3.0f;
+
 	style.ScrollbarSize = 10;
 	style.ScrollbarRounding = 15;
-	style.WindowMenuButtonPosition = 0;
-	style.WindowPadding.x = 3;
-	style.FrameBorderSize = 1;
 	style.PopupBorderSize = 0;
-	//style.FrameRounding = 3;
+
+    style.FrameBorderSize = 1;
+	style.FrameRounding = 3.0f;
+
+    
 
 	style.Colors[ImGuiCol_Separator] = ImVec4(0.01f, 0.01f, 0.01f, 1.00f);
 

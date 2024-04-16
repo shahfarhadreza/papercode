@@ -8,6 +8,8 @@ module;
 #include <vector>
 #include <memory>
 #include <filesystem>
+#include <expected>
+#include <format>
 #include <yaml-cpp/yaml.h>
 
 export module project;
@@ -82,7 +84,7 @@ public:
     ~Project();
 
     bool createNew(const ProjectDesc& desc);
-    bool loadFromFile(const std::filesystem::path& filepath);
+    std::expected<bool, std::string> loadFromFile(const std::filesystem::path& filepath);
     bool saveToFile();
 
     ProjectFilePtr addNewFile(const std::string& path);
@@ -202,12 +204,11 @@ bool Project::createNew(const ProjectDesc& desc) {
     return true;
 }
 
-bool Project::loadFromFile(const std::filesystem::path& file) {
+std::expected<bool, std::string> Project::loadFromFile(const std::filesystem::path& file) {
 
     // Check if the file actually exist
     if (!std::filesystem::exists(file)) {
-        std::cout << "ERROR: Project file '" << file << "' doesn't exist" << std::endl;
-        return false;
+        return std::unexpected(std::format("Project file '{}' doesn't exist", file.string()));
     }
 
     std::filesystem::path pathOnly = file.parent_path();

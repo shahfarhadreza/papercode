@@ -27,6 +27,7 @@ target_sources(core
     src/core/Settings.cppm
     src/core/LogSystem.cppm
     src/core/BuildOption.cppm
+    src/core/Manager.cppm
     )
 
 set( SRCS 
@@ -40,6 +41,7 @@ set( SRCS
     src/UIProperties.cpp 
     src/UIExplorer.cpp 
     src/UINewProject.cpp 
+    src/UIPreference.cpp
     src/UISystem.cpp
     src/UIMessageBox.cpp
     src/GLFWHelper.cpp

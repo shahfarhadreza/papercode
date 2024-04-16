@@ -211,7 +211,7 @@ void UISystem::drawToolbar() {
     ImGui_QuickTooltip("Save Everything...", mDefaultFontGUI);
 
     // We won't need the following button unless we have a project
-    if (PaperCode::get().mProject) {
+    if (PaperCode::get().getActiveProject()) {
         bool disbaled = false;
 
         if (PaperCode::get().isBuilding()) {
@@ -253,7 +253,8 @@ void UISystem::drawToolbar() {
     }
     //ImGui::SameLine();
     if (ImGui::Button(ICON_FA_COG, toolBtnSize)) {
-        PaperCode::get().executeCommand(Commands::Settings);
+        mPreference.open();
+        //PaperCode::get().executeCommand(Commands::Settings);
     }
     ImGui_QuickTooltip("Preferences", mDefaultFontGUI);
 
@@ -286,6 +287,11 @@ void UISystem::drawUI() {
         ImGui::EndPopup();
     }
 
+    if (ImGui::BeginPopupModal("Preference")) {
+        mPreference.draw();
+        ImGui::EndPopup();
+    }
+
     if (ImGui::BeginPopupModal((mMsgBox.mTitle + "###Message Box").c_str(), 0, 0/*ImGuiWindowFlags_NoResize*/)) {
         mMsgBox.draw();
         ImGui::EndPopup();
@@ -295,7 +301,7 @@ void UISystem::drawUI() {
 
     ImGui::PushFont(mDefaultFontGUI);
 
-    if (PaperCode::get().mProject) {
+    if (PaperCode::get().getActiveProject()) {
         mExplorer.draw();
 
         // Build Log
@@ -341,6 +347,8 @@ void UISystem::drawUI() {
         ImGui::EndPopup();
     }
 
+    const ImGuiStyle& style = ImGui::GetStyle();
+
     // Status Bar
     if (mShowStatus) {
         ImGui::Begin("Status");
@@ -349,6 +357,33 @@ void UISystem::drawUI() {
             ImGui::Text("%s", "Building...");
         } else {
             ImGui::Text("%s", "Ready");
+        }
+
+        UIEditorPtr editor = getEditorManager().getActiveEditor();
+
+        if (editor) {
+            ImGui::SameLine();
+
+            std::string strLineColumn_ = std::format("Line: {}, Column: {}", editor->getLine(), editor->getColumn());
+            const char* strLineColumn = strLineColumn_.c_str();
+            float lineColumnW = ImGui::CalcTextSize(strLineColumn).x;
+
+            std::string strTabSize_ = std::format("Tab Size: {}", editor->mImEditor->GetTabSize());
+            const char* strTabSize = strTabSize_.c_str();
+            float tabSizeW = ImGui::CalcTextSize(strTabSize).x;
+
+            ImVec2 avail = ImGui::GetContentRegionAvail();
+            ImGui::SetCursorPosX((ImGui::GetCursorPosX() + avail.x) - (tabSizeW + lineColumnW + (style.WindowPadding.x*5)));
+
+            // Draw Them
+
+            ImGui::Text("%s", strLineColumn);
+
+            ImGui::SameLine();
+
+            ImGui::SetCursorPosX((ImGui::GetCursorPosX() + (style.WindowPadding.x*2)));
+
+            ImGui::Text("%s", strTabSize);
         }
 
         ImGui::End();
@@ -458,6 +493,22 @@ void UISystem::drawUIStartPage() {
     
     ImGui::Text("%s", copyrightNotice);
 
+    ImGui::SameLine();
+
+    const char* switchLang = "Switch Language?";
+
+    float text_width = ImGui::CalcTextSize(switchLang).x;
+    float text_width2 = ImGui::CalcTextSize("Bangla").x;
+
+    ImGui::SetCursorPosX(ImGui::GetWindowSize().x - text_width - text_width2 - (style.WindowPadding.x*5));
+    ImGui::Text("%s", switchLang);
+
+    ImGui::SameLine();
+
+    if (ImGui_LinkButton("Bangla", "Switch to Bangla Language?")) {
+        
+    }
+
     ImGui::End();
 
     ImGui::PopFont();
@@ -475,7 +526,7 @@ void UISystem::drawEvent() {
 
     ImGui::DockSpaceOverViewport();
 
-    if (getEditorManager().hasEditors() == false && PaperCode::get().mProject == nullptr) {
+    if (getEditorManager().hasEditors() == false && PaperCode::get().getActiveProject() == nullptr) {
         drawUIStartPage();
     } else {
         drawUI();

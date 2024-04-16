@@ -22,6 +22,7 @@ export struct ApplicationSettings {
     std::vector<Recent> mRecentProjects;
 
     float mEditorFontSize = 15.0f;
+    std::string mThemeName = "Default";
 
     void addToRecentProject(const std::string& filepath);
     void removeFromRecentProject(const std::string& filepath);

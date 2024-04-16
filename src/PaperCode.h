@@ -5,6 +5,7 @@ import settings;
 import subprocess;
 import logsystem;
 import buildoption;
+import manager;
 
 enum class FileContextMenuAction {
     None,
@@ -46,6 +47,9 @@ public:
     void init();
     void destroy();
 
+    int getLine() const { return mImEditor->GetCursorPosition().getLine(); }
+    int getColumn() const { return mImEditor->GetCursorPosition().getColumn(); }
+
     const std::filesystem::path& getFilePath() const { return mFilePath; }
     const std::string& getFileName() const { return mFileName; }
 
@@ -69,15 +73,23 @@ struct UIProjectProperties {
 
     bool mShow = false;
     std::shared_ptr<Project> mProject = nullptr;
-    std::string mName = "";
     std::string mDirectory = "";
     std::string mObjDirectory = "";
     std::string mBinDirectory = "";
-    BuildOption mBuildOption = {};
+    ProjectDesc mProperties = {};
 
     void open(std::shared_ptr<Project> proj);
     void close();
     void applyChanges();
+    void draw();
+};
+
+struct UIPreference {
+
+    void open();
+    void close();
+    void applyChanges();
+
     void draw();
 };
 
@@ -170,6 +182,8 @@ struct UIEditorManager {
 
     UIEditorPtr getEditor(const std::filesystem::path& filepath);
 
+    UIEditorPtr getActiveEditor() { return mActiveEditor; }
+
     bool hasEditors() const { return !mEditors.empty(); }
 
     void saveActive();
@@ -191,6 +205,7 @@ struct UISystem {
     UINewProject mNewProject;
     UINewFile mNewFile;
     UIRenameFile mRenameFile;
+    UIPreference mPreference;
 
     //
     bool mShowStatus = true;
@@ -275,10 +290,11 @@ struct CommandData {
     std::string FileNewName = "";
 };
 
+/* Handles all the requests/commands/notifications between UI System and Manager
+ */
 struct PaperCode {
     ApplicationSettings mSettings;
     Compiler mCompiler;
-    ProjectPtr mProject = nullptr;
     ExecutionStatus mExecutionStatus = ExecutionStatus::None;
     std::jthread mBuildThread;
     std::jthread mRunThread;
@@ -299,14 +315,18 @@ struct PaperCode {
         return UISystem::get();
     }
 
+    Manager& getManager() {
+        return Manager::get();
+    }
+
+    ProjectPtr getActiveProject() { return getManager().getActiveProject(); }
+
     bool init(const std::vector<std::string>& args);
     bool run();
     bool terminate();
 
     void createProject(const ProjectTemplate& temp);
     bool openProject(const std::string& filepath);
-
-    ProjectPtr getActiveProject() const { return mProject; }
 
     bool isBuilding() const;
     bool isProjectRunning() const;
@@ -326,9 +346,9 @@ struct PaperCode {
     void runProject();
     void stopProject();
 
-    void executeCommand(Commands cmd, CommandData data = {});
+    void updateProjectProperties(const ProjectDesc& desc);
 
-    UISystem& getWindowSystem() { return UISystem::get(); }
+    void executeCommand(Commands cmd, CommandData data = {});
 };
 
 

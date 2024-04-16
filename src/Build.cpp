@@ -20,9 +20,15 @@ void PaperCode::runProject() {
         return;
     }
 
+    ProjectPtr mProject = getActiveProject();
+
+    if (!mProject) {
+        return;
+    }
+
     mChildProcess = std::make_shared<SubProcess>();
 
-    mRunThread = std::jthread([this] () {
+    mRunThread = std::jthread([this, mProject] () {
 
         UISystem& mUISystem = getUI();
 
@@ -47,29 +53,30 @@ void PaperCode::runProject() {
 
         if (!mChildProcess->create(cmd, SubProcessFlags::CreateConsole)) {
             mUISystem.appendBuildLog(std::format("Failed to execute command '{}'\r\n", cmd), LogType::Error);
-        }
+        } else {
 /*
-        const DWORD result = mChildProcess->wait();
-        if (result != WAIT_OBJECT_0) {
-            // Timed out or an error occurred
-            mUISystem.appendBuildLog("Failed to wait for process to finish\r\n", LogType::Error);
-        }
+            const DWORD result = mChildProcess->wait();
+            if (result != WAIT_OBJECT_0) {
+                // Timed out or an error occurred
+                mUISystem.appendBuildLog("Failed to wait for process to finish\r\n", LogType::Error);
+            }
 */
 
-        while(1) {
-            int exitCode;
-            if (mChildProcess->getExitCode(&exitCode)) {
-                if (!mChildProcess->isAlive()) {
-                    mUISystem.appendBuildLog(std::format("Process terminated with status {} (0 seconds(s))\r\n", exitCode), LogType::Info);
+            while(1) {
+                int exitCode;
+                if (mChildProcess->getExitCode(&exitCode)) {
+                    if (!mChildProcess->isAlive()) {
+                        mUISystem.appendBuildLog(std::format("Process terminated with status {} (0 seconds(s))\r\n", exitCode), LogType::Info);
+                        break;
+                    }
+                } else {
+                    mUISystem.appendBuildLog(std::format("Failed to get exit code\r\n"), LogType::Error);
                     break;
                 }
-            } else {
-                mUISystem.appendBuildLog(std::format("Failed to get exit code\r\n"), LogType::Error);
-                break;
             }
-        }
 
-        mChildProcess->terminate();
+            mChildProcess->terminate();
+        }
 
         mExecutionStatus = ExecutionStatus::None;
     });
@@ -84,6 +91,9 @@ bool CompileProjectFiles(ProjectPtr proj) {
 }
 
 void PaperCode::buildProject() {
+
+    ProjectPtr mProject = getActiveProject();
+
     // No project to build?
     if (!mProject) {
         return;
@@ -96,6 +106,16 @@ void PaperCode::buildProject() {
 
     // Hit the save
     saveAll();
+
+    // Check for compiler
+    {
+        auto compiler = std::make_shared<SubProcess>();
+
+        if (!compiler->create("g++ -v", SubProcessFlags::None)) {
+            getUI().messageBox("Failed to execute command 'g++ -v'. GCC compiler missing?", UIMessageBoxType::Error);
+            return;
+        }
+    }
 
     // Make sure we have all the directories we need to put our compiled files into
 
@@ -144,7 +164,7 @@ void PaperCode::buildProject() {
     std::filesystem::current_path(old);
 
     std::cout << "LOG: Starting build thread..." << std::endl;
-    mBuildThread = std::jthread([this, objAbsolutePath, binAbsolutePath] (const std::stop_token& st) {
+    mBuildThread = std::jthread([this, mProject, objAbsolutePath, binAbsolutePath] (const std::stop_token& st) {
 
         UISystem& mUISystem = getUI();
 

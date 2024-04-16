@@ -76,6 +76,9 @@ public:
 		}
 		static Coordinates Invalid() { static Coordinates invalid(-1, -1); return invalid; }
 
+		int getLine() const { return mLine; }
+		int getColumn() const { return mColumn; }
+
 		bool operator ==(const Coordinates& o) const
 		{
 			return

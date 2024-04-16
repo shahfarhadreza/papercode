@@ -6,9 +6,7 @@ void PaperCode::saveCurrentFile() {
 }
 
 void PaperCode::saveProject() {
-    if (mProject) {
-        mProject->saveToFile();
-    }
+    getManager().saveProject();
 }
 
 void PaperCode::saveAll() {
@@ -23,53 +21,11 @@ void PaperCode::createProject(const ProjectTemplate& temp) {
     // Don't forget to close the current one (if has)
     closeProject();
 
-    const ProjectDesc& desc = temp.getDescription();
-
-    mProject = std::make_shared<Project>();
-    if (!mProject->createNew(desc)) {
-        mProject = nullptr;
-        std::cout << "Failed to create new project" << std::endl;
-        return;
-    } else {
-
-        // Add the template files to the project
-        for (const ProjectTemplateFile& file : temp.getFiles()) {
-            std::filesystem::path filePath = mProject->getDirectoryPath();
-            filePath.append(file.getName());
-
-            mProject->addFile(filePath.string());
-        }
-        // This will create the project directory (if doesn't exist already)
-        // and create the actual project file (.paper)
-        if (mProject->saveToFile()) {
-            std::cout << "Successfuly created new project '" << mProject->getName() << "'" << std::endl;
-        }
-        // Create the template files and write template codes to them
-        for (const ProjectTemplateFile& file : temp.getFiles()) {
-            std::filesystem::path filePath = mProject->getDirectoryPath();
-            filePath.append(file.getName());
-
-            // Perhaps the project directory already contains a file with similar name?
-            // Let's give a warning and skip creating file...
-            if (std::filesystem::exists(filePath)) {
-                // TODO: Warning Popup Dialog
-                std::cout << "WARNING: Project directory already contains file '" << file.getName() << "'" << std::endl;
-            } else {
-                std::ofstream t(filePath);
-                if (t.good()) {
-                    t << file.getCode();
-                    t.close();
-                } else {
-                    std::cout << "ERROR: Failed to create template file '" << filePath << "'" << std::endl;
-                }
-            }
-            //printf("template file %s\n", filePath.c_str());
-        }
+    if (getManager().createProject(temp)) {
+        mSettings.addToRecentProject(getActiveProject()->getFilePath().string());
+        // TODO: Should we?
+        openAllFiles();
     }
-
-    mSettings.addToRecentProject(mProject->getFilePath().string());
-    // TODO: Should we?
-    openAllFiles();
 }
 
 void PaperCode::newProjectDialog() {
@@ -77,29 +33,26 @@ void PaperCode::newProjectDialog() {
 }
 
 void PaperCode::newFileDialog() {
-    getUI().newFileDialog(mProject);
+    getUI().newFileDialog(getActiveProject());
 }
 
 void PaperCode::closeProject() {
-    if (!mProject) {
-        return;
-    }
     if (mExecutionStatus != ExecutionStatus::None) {
         return;
     }
+    getManager().closeProject();
     getUI().getEditorManager().closeAllEditors();
-    mProject = nullptr;
 }
 
 void PaperCode::openAllFiles() {
-    if (!mProject) {
+    if (!getActiveProject()) {
         return;
     }
     auto old = std::filesystem::current_path();
-    std::filesystem::current_path(mProject->getDirectoryPath());
+    std::filesystem::current_path(getActiveProject()->getDirectoryPath());
 
     // open all the files in editor
-    for (ProjectFilePtr file : mProject->mFileList) {
+    for (ProjectFilePtr file : getActiveProject()->mFileList) {
 
         std::filesystem::path filePath(file->getPath());
 
@@ -119,9 +72,10 @@ bool PaperCode::openProject(const std::string& filepath) {
     // Don't forget to close the current one (if has)
     closeProject();
 
-    mProject = std::make_shared<Project>();
-    if (!mProject->loadFromFile(filepath)) {
-        mProject = nullptr;
+    if (getManager().openProject(filepath)) {
+        mSettings.addToRecentProject(filepath);
+        openAllFiles();
+    } else {
         std::cout << "ERROR: Failed to load project" << std::endl;
         getUI().messageBox(std::format("Failed to load project '{}'", filepath), 
             UIMessageBoxType::Error, [this, &filepath](auto action) {
@@ -129,9 +83,13 @@ bool PaperCode::openProject(const std::string& filepath) {
             });
         return false;
     }
-    mSettings.addToRecentProject(filepath);
-    openAllFiles();
     return true;
+}
+
+void PaperCode::updateProjectProperties(const ProjectDesc& desc) {
+    if (getActiveProject()) {
+        getActiveProject()->mDesc = desc;
+    }
 }
 
 void PaperCode::executeCommand(Commands cmd, CommandData data) {
@@ -203,8 +161,8 @@ void PaperCode::executeCommand(Commands cmd, CommandData data) {
         saveAll();
         break;
     case Commands::ProjectProperties:
-        if (mProject) {
-            getUI().mProjectProperties.open(mProject);
+        if (getActiveProject()) {
+            getUI().mProjectProperties.open(getActiveProject());
         }
         break;
     default:

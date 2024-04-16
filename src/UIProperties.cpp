@@ -93,21 +93,22 @@ void UINewFile::draw() {
 
 void UIProjectProperties::open(std::shared_ptr<Project> proj) {
     mProject = proj;
-    mName = mProject->getName();
     mDirectory = mProject->getDirectoryPath().string();
     mObjDirectory = mProject->getObjPath();
     mBinDirectory = mProject->getBinPath();
 
-    mBuildOption = mProject->mDesc.mBuildOption;
+    // Copy the current properties
+    mProperties = mProject->mDesc;
 
     mShow = true;
     ImGui::OpenPopup("Project Properties");
 }
 
 void UIProjectProperties::applyChanges() {
-    if (!mName.empty()) {
-        mProject->setName(mName);
-        mProject->mDesc.mBuildOption = mBuildOption;
+    if (!mProperties.mName.empty()) {
+        PaperCode::get().updateProjectProperties(mProperties);
+    } else {
+
     }
 }
 
@@ -125,7 +126,7 @@ void UIProjectProperties::draw() {
             if (ImGui::BeginTabItem("General")) {
 
 
-                ImGui_DrawProperties("Name:", &mName);
+                ImGui_DrawProperties("Name:", &mProperties.mName);
                 ImGui_DrawProperties("Path:", &mDirectory, 0.0f, true);
                 ImGui_DrawProperties("Object Path:", &mObjDirectory);
                 ImGui_DrawProperties("Output Path:", &mBinDirectory);
@@ -135,18 +136,18 @@ void UIProjectProperties::draw() {
 
             if (ImGui::BeginTabItem("Compiler Options")) {
 
-                ImGui_Select<BuildLanguageStandard>(mBuildOption.mLanguageStandard, BuildLanguageStandardString, "Language Standard");
-                ImGui_DrawProperties("Additional Flags:", &mBuildOption.mAdditionalCompileFlags);
+                ImGui_Select<BuildLanguageStandard>(mProperties.mBuildOption.mLanguageStandard, BuildLanguageStandardString, "Language Standard");
+                ImGui_DrawProperties("Additional Flags:", &mProperties.mBuildOption.mAdditionalCompileFlags);
 
                 ImGui::EndTabItem();
             }
 
             if (ImGui::BeginTabItem("Linker Options")) {
 
-                ImGui_Select<BuildSubSystem>(mBuildOption.mSubSystem, BuildSubSystemString, "Sub System");
-                ImGui_Select<BuildType>(mBuildOption.mType, BuildTypeString, "Build As");
+                ImGui_Select<BuildSubSystem>(mProperties.mBuildOption.mSubSystem, BuildSubSystemString, "Sub System");
+                ImGui_Select<BuildType>(mProperties.mBuildOption.mType, BuildTypeString, "Build As");
 
-                ImGui_DrawProperties("Additional Flags:", &mBuildOption.mAdditionalLinkFlags);
+                ImGui_DrawProperties("Additional Flags:", &mProperties.mBuildOption.mAdditionalLinkFlags);
 
                 ImGui::EndTabItem();
             }

@@ -70,7 +70,7 @@ void UIExplorer::draw() {
 
     ProjectAction action = ProjectAction::None;
 
-    auto mProject = app.mProject;
+    auto mProject = app.getActiveProject();
 
     if (mProject) {
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_FramePadding | ImGuiTreeNodeFlags_DefaultOpen;
