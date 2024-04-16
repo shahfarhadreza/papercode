@@ -23,6 +23,9 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightni
 
 See Release - https://github.com/shahfarhadreza/papercode/releases/tag/beta-build-11pm-14-april-2024
 
+GCC Compilers (MinGW-w64) - https://winlibs.com/#download-release
+Don't forget to add the compiler path (bin folder) to the environment variables of operating system. Otherwise Paper Coder won't be able to find your GCC compiler in order to build your C++ projects.
+
 # How to Build
 
 **Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding.
