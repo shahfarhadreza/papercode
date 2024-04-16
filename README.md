@@ -21,13 +21,23 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightni
 
 # Download
 
+### Paper Code
 See Release - https://github.com/shahfarhadreza/papercode/releases/tag/beta-build-11pm-14-april-2024
+
+### C++ Compiler
+
+GCC Compilers (MinGW-w64) - https://winlibs.com/#download-release
+Don't forget to add the compiler path (bin folder) to the environment variables of operating system. Otherwise Paper Code won't be able to find your GCC compiler in order to build your C++ projects.
 
 # How to Build
 
-**Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding. The basic steps to build are:
+**Paper Code** uses `CMake` to support cross-platform building. Install CMake before proceeding.
 
 **Note:** If you don't use the provided installer for your platform, make sure that you add CMake's bin folder to your path.
+
+C++ Version Required: C++23 Or Higher
+
+The basic steps to build are:
 
 1. **Generate**
 
