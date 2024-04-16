@@ -68,6 +68,9 @@ void UIEditorManager::closeEditor(const std::string& filepath) {
             editor->destroy();
             mEditors.erase(it);
         }
+        if (mActiveEditor == editor) {
+            mActiveEditor = nullptr;
+        }
     }
 }
 
@@ -92,6 +95,9 @@ void UIEditorManager::closeEditor(UIEditorPtr editor) {
             mEditors.erase(it);
         }
     }
+    if (mActiveEditor == editor) {
+        mActiveEditor = nullptr;
+    }
 }
 
 void UIEditorManager::closeAllEditors() {
@@ -111,6 +117,7 @@ void UIEditorManager::closeAllEditors() {
     } else {
         mEditors.clear();
     }
+    mActiveEditor = nullptr;
 }
 
 void UIEditorManager::draw() {

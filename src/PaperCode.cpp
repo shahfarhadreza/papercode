@@ -40,8 +40,8 @@ void PaperCode::closeProject() {
     if (mExecutionStatus != ExecutionStatus::None) {
         return;
     }
-    getManager().closeProject();
     getUI().getEditorManager().closeAllEditors();
+    getManager().closeProject();
 }
 
 void PaperCode::openAllFiles() {
