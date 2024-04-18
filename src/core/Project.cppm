@@ -84,7 +84,7 @@ public:
     ~Project();
 
     bool createNew(const ProjectDesc& desc);
-    std::expected<bool, std::string> loadFromFile(const std::filesystem::path& filepath);
+    bool loadFromFile(const std::filesystem::path &filepath);
     bool saveToFile();
 
     ProjectFilePtr addNewFile(const std::string& path);
@@ -204,11 +204,11 @@ bool Project::createNew(const ProjectDesc& desc) {
     return true;
 }
 
-std::expected<bool, std::string> Project::loadFromFile(const std::filesystem::path& file) {
-
+bool Project::loadFromFile(const std::filesystem::path &file)
+{
     // Check if the file actually exist
     if (!std::filesystem::exists(file)) {
-        return std::unexpected(std::format("Project file '{}' doesn't exist", file.string()));
+        return false;
     }
 
     std::filesystem::path pathOnly = file.parent_path();
