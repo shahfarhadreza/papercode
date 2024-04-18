@@ -56,8 +56,11 @@ ImVec2 ImGui_DrawProperties(const std::string& caption, std::string* text, float
     } else {
         char buffer[256];
         memset(buffer, 0, sizeof(buffer));
+#if defined(WIN32)
         strncpy_s(buffer, sizeof(buffer), (*text).c_str(), sizeof(buffer));
-
+#else
+        strncpy(buffer, (*text).c_str(), sizeof(buffer));
+#endif
         if (ImGui::InputText(("##" + caption).c_str(), buffer, sizeof(buffer))) {
             *text = std::string(buffer);
         }
