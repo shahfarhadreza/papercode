@@ -6,9 +6,8 @@ module;
 #include <vector>
 #include <iostream>
 #include <functional>
-#include <windows.h>
-#include <processthreadsapi.h>
-#include <handleapi.h>
+#include <unistd.h>
+
 
 #define BUFSIZE 4096 
 
@@ -28,7 +27,26 @@ export SubProcessFlags operator&(SubProcessFlags lhs, SubProcessFlags rhs)  {
     return static_cast<SubProcessFlags>(static_cast<char>(lhs) & static_cast<char>(rhs));
 }
 
-export class SubProcess
+export class ISubProcess
+{
+public:
+    virtual ~ISubProcess() = default;
+
+    virtual void cleanUp() = 0;
+    virtual bool create(const std::string& cmd, SubProcessFlags flags) = 0;
+    virtual void read(std::function<void(const std::string&)> cb) = 0;
+    virtual void terminate() = 0;
+    virtual bool isAlive() const = 0;
+    virtual int getExitCode(int* pExitCode) const = 0;
+    virtual int wait() const = 0;
+};
+
+#if defined(WIN32)
+#include <processthreadsapi.h>
+#include <handleapi.h>
+#include <windows.h>
+
+export class SubProcessWin32 : public ISubProcess
 {
 public:
     PROCESS_INFORMATION pi;
@@ -170,4 +188,52 @@ public:
         return WaitForSingleObject(pi.hProcess, INFINITE);
     }
 };
+
+export using SubProcess = SubProcessWin32;
+
+#elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+
+export class SubProcessPosix : public ISubProcess
+{
+public:
+    SubProcessPosix() {
+
+    }
+
+    ~SubProcessPosix() {
+
+    }
+
+    virtual void cleanUp() override {
+
+    }
+
+    virtual bool create(const std::string& cmd, SubProcessFlags flags) {
+
+    }
+    virtual void read(std::function<void(const std::string&)> cb) {
+
+    }
+
+    virtual void terminate() {
+
+    }
+
+    virtual bool isAlive() const {
+
+    }
+
+    virtual int getExitCode(int* pExitCode) const {
+
+    }
+    virtual int wait() const {
+
+    }
+};
+
+export using SubProcess = SubProcessPosix;
+
+#else
+    port to this platform
+#endif
 
