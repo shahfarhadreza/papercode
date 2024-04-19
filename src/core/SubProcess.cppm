@@ -6,8 +6,20 @@ module;
 #include <vector>
 #include <iostream>
 #include <functional>
+
+#if defined(WIN32)
+
+#include <windows.h>
+#include <processthreadsapi.h>
+#include <handleapi.h>
+
+#elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+
 #include <unistd.h>
 
+#else
+    #error port to this platform
+#endif
 
 #define BUFSIZE 4096 
 
@@ -42,9 +54,6 @@ public:
 };
 
 #if defined(WIN32)
-#include <processthreadsapi.h>
-#include <handleapi.h>
-#include <windows.h>
 
 export class SubProcessWin32 : public ISubProcess
 {
@@ -54,12 +63,12 @@ public:
     HANDLE g_hChildStd_OUT_Rd = NULL;
     HANDLE g_hChildStd_OUT_Wr = NULL;
 
-    SubProcess() {
+    SubProcessWin32() {
         ZeroMemory( &pi, sizeof(pi) );
         pi.hProcess = nullptr;
     }
 
-    ~SubProcess() {
+    ~SubProcessWin32() {
         if (isAlive()) {
             terminate();
         }
@@ -184,8 +193,8 @@ public:
         return ret;
     }
 
-    DWORD wait() const {
-        return WaitForSingleObject(pi.hProcess, INFINITE);
+    int wait() const {
+        return (int)WaitForSingleObject(pi.hProcess, INFINITE);
     }
 };
 
@@ -234,6 +243,6 @@ public:
 export using SubProcess = SubProcessPosix;
 
 #else
-    port to this platform
+    #error port to this platform
 #endif
 

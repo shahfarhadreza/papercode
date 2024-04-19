@@ -61,6 +61,11 @@ set( SRCS
 
 add_executable( papercode ${SRCS} )
 
+if (WIN32)
+target_compile_definitions(papercode PUBLIC WIN32)
+target_compile_definitions(core PUBLIC WIN32)
+endif()
+
 add_subdirectory(vendors/glfw)
 add_subdirectory(vendors/yaml-cpp)
 

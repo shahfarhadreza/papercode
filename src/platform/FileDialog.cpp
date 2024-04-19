@@ -59,6 +59,6 @@ std::string OpenFileDialog(GLFWwindow* window, const char* filters) {
 std::string SaveFileDialog(GLFWwindow* window, const char* filters) {
 }
 #else
-    port to this platform
+    #error port to this platform
 #endif
 

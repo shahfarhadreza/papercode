@@ -404,6 +404,7 @@ TextEditor::Coordinates TextEditor::FindWordStart(const Coordinates & aFrom) con
 	while (cindex > 0)
 	{
 		auto c = line[cindex].mChar;
+		printf("found c %c\n", c);
 		if ((c & 0xC0) != 0x80)	// not UTF code sequence 10xxxxxx
 		{
 			if (!isalpha(c)) {
