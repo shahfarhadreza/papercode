@@ -15,14 +15,14 @@
 #include <functional>
 #include <cctype>
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 #include <imgui.h>
-#include <backends\imgui_impl_glfw.h>
-#include <backends\imgui_impl_opengl2.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl2.h>
 
-#include <font-awesome\IconsFontAwesome5.h>
+#include <font-awesome/IconsFontAwesome5.h>
 
-
-
+#include <TextEditor.h>

@@ -1,10 +1,11 @@
 #include <string>
-#include <windows.h>
-#include <commdlg.h>
 #include <GLFW/glfw3.h>
+
+#if defined(WIN32)
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
-
+#include <windows.h>
+#include <commdlg.h>
 std::string OpenFileDialog(GLFWwindow* window, const char* filters) {
     OPENFILENAMEA ofn;
     CHAR szFile[260] = { 0 };
@@ -49,4 +50,15 @@ std::string SaveFileDialog(GLFWwindow* window, const char* filters) {
 
     return std::string();
 }
+
+#elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+
+std::string OpenFileDialog(GLFWwindow* window, const char* filters) {
+}
+
+std::string SaveFileDialog(GLFWwindow* window, const char* filters) {
+}
+#else
+    port to this platform
+#endif
 

@@ -59,6 +59,22 @@ The command you'll need to run depends on the generator you chose earlier. For e
 
 After the building process completes, you will find the executable in the bin folder to run. 
 
+# Build on linux
+
+Currently testd only on Debian testing. Ubuntu 22.04 is probably not going to work, lets wait to 
+Ubuntu 24.04, hopefully this will work as well.
+
+Install build dependencies, and build:
+```
+sudo apt install clang-17 clang-tools-17 build-essential ninja cmake xorg-dev
+CXX=clang+-17 cmake -C cbuild -G Ninja
+cmake -b cbuild
+```
+
+Note that due to heavy usage of C++20,C++23 - gcc is not alawys supported  (gcc 13 cannot compile 
+this project). Clang 18 should compile, but it is not available on Debian yet. For this reason
+the GNUMakefile generator will not work and you must use ninja.
+
 # Dependencies
 
 * GLFW
