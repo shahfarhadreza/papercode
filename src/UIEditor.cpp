@@ -1,5 +1,6 @@
 #include "Stdafx.h"
 #include "PaperCode.h"
+#include "TextEditor.h"
 
 void UIEditor::init() {
     mImEditor = std::make_shared<TextEditor>();
@@ -8,6 +9,18 @@ void UIEditor::init() {
 
 void UIEditor::destroy() {
     mImEditor = nullptr;
+}
+
+int UIEditor::getLine() const { 
+    return mImEditor->GetCursorPosition().getLine(); 
+}
+
+int UIEditor::getColumn() const { 
+    return mImEditor->GetCursorPosition().getColumn(); 
+}
+
+int UIEditor::getTabSize() const { 
+    return mImEditor->GetTabSize(); 
 }
 
 bool UIEditor::isFileOpen(const std::filesystem::path& filepath) const { 

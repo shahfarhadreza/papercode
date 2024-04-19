@@ -164,7 +164,7 @@ void PaperCode::buildProject() {
     std::filesystem::current_path(old);
 
     std::cout << "LOG: Starting build thread..." << std::endl;
-    mBuildThread = std::jthread([this, mProject, objAbsolutePath, binAbsolutePath] (const std::stop_token& st) {
+    mBuildThread = std::jthread([this, mProject, objAbsolutePath, binAbsolutePath] () {
 
         UISystem& mUISystem = getUI();
 

@@ -1,6 +1,6 @@
 #include "Stdafx.h"
 #include "PaperCode.h"
-
+#include "TextEditor.h"
 #include "ImGuiHelper.h"
 
 void UIEditorManager::saveActive() {
@@ -101,6 +101,7 @@ void UIEditorManager::closeEditor(UIEditorPtr editor) {
 }
 
 void UIEditorManager::closeAllEditors() {
+    std::cout << "LOG: closing all editors..." << std::endl;
     UIEditorList::iterator it = mEditors.begin();
     bool isModified = false;
     while (it != mEditors.end()) {

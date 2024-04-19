@@ -351,6 +351,10 @@ private:
 	void HandleMouseInputs();
 	void Render();
 
+	void ResetAutoComplete();
+	void StartAutoComplete(const Coordinates& pos);
+	void RenderAutoComplete(const ImVec2& aPosition);
+
 	float mLineSpacing;
 	Lines mLines;
 	EditorState mState;
@@ -374,6 +378,15 @@ private:
 	bool mHandleMouseInputs;
 	bool mIgnoreImGuiChild;
 	bool mShowWhitespaces;
+
+	bool mShowAutoComplete = false;
+	bool mMouseOverAutoComplete = false;
+	bool mAutoCompleteSelectionChanged = false;
+	Coordinates mAutoCompleteCoord;
+	ImVec2 mAutoCompletePos;
+	std::string mAutoCompleteWord;
+	std::vector<std::string> mAutoCompleteList;
+	int mAutoCompleteBestMatchIndex = -1;
 
 	Palette mPaletteBase;
 	Palette mPalette;

@@ -37,6 +37,7 @@ void PaperCode::newFileDialog() {
 }
 
 void PaperCode::closeProject() {
+    std::cout << "LOG: closing project..." << std::endl;
     if (mExecutionStatus != ExecutionStatus::None) {
         return;
     }
@@ -199,9 +200,9 @@ bool PaperCode::run() {
 }
 
 bool PaperCode::terminate() {
+    std::cout << "LOG: app terminating..." << std::endl;
     mExecutionStatus = ExecutionStatus::None;
     mSettings.serialize();
-    closeProject();
     getUI().terminate();
     return true;
 }

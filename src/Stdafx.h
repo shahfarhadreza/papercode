@@ -24,5 +24,5 @@
 
 #include <font-awesome\IconsFontAwesome5.h>
 
-#include <TextEditor.h>
+
 

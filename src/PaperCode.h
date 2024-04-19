@@ -28,6 +28,8 @@ struct UIElement {
     std::string mTitle;
 };
 
+class TextEditor;
+
 struct UIEditor
 {
 protected:
@@ -47,8 +49,10 @@ public:
     void init();
     void destroy();
 
-    int getLine() const { return mImEditor->GetCursorPosition().getLine(); }
-    int getColumn() const { return mImEditor->GetCursorPosition().getColumn(); }
+    int getLine() const;
+    int getColumn() const;
+
+    int getTabSize() const;
 
     const std::filesystem::path& getFilePath() const { return mFilePath; }
     const std::string& getFileName() const { return mFileName; }

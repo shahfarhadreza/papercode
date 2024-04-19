@@ -368,7 +368,7 @@ void UISystem::drawUI() {
             const char* strLineColumn = strLineColumn_.c_str();
             float lineColumnW = ImGui::CalcTextSize(strLineColumn).x;
 
-            std::string strTabSize_ = std::format("Tab Size: {}", editor->mImEditor->GetTabSize());
+            std::string strTabSize_ = std::format("Tab Size: {}", editor->getTabSize());
             const char* strTabSize = strTabSize_.c_str();
             float tabSizeW = ImGui::CalcTextSize(strTabSize).x;
 
@@ -541,9 +541,7 @@ void UISystem::drawEvent() {
 }
 
 void UISystem::terminate() {
-
-    getEditorManager().closeAllEditors();
-
+    std::cout << "LOG: UI System terminating..." << std::endl;
     glfwDestroyWindow(mWindow);
 	glfwTerminate();
 }
