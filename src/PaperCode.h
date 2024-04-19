@@ -231,7 +231,7 @@ struct UISystem {
     bool init(uint32_t height, uint32_t width, const char* title);
     void initFonts();
 
-    std::string openFileDialog(const char* filters);
+    std::string openFileDialog(std::vector<std::string> const &filters);
     void newFileDialog(ProjectPtr project);
 
     void notify(UINotification notif, UINotificationData data = {});

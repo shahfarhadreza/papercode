@@ -9,7 +9,7 @@
 
 #include "ImGuiHelper.h"
 
-std::string OpenFileDialog(GLFWwindow* window, const char* filters);
+std::string OpenFileDialog(GLFWwindow* window, std::vector<std::string> const &filters);
 bool glfwSetWindowCenter( GLFWwindow * window );
 
 void GLFW_error(int error, const char* description) {
@@ -433,8 +433,8 @@ void UISystem::drawUIStartPage() {
     }
     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
     if (ImGui_LinkButton(ICON_FA_FOLDER_OPEN " Open Project...")) {
-        std::string filePath = openFileDialog("Paper Code Project (*.paper)\0*.paper\0"
-                                 "All Files (*.*)\0*.*\0");
+        std::string filePath = openFileDialog({"Paper Code Project (*.paper)", "*.paper",
+                                 "All Files (*.*)", "*.*"});
         if (!filePath.empty()) {
             PaperCode::get().executeCommand(Commands::Open, CommandData {.FilePath = filePath} );
         }
@@ -546,7 +546,7 @@ void UISystem::terminate() {
 	glfwTerminate();
 }
 
-std::string UISystem::openFileDialog(const char* filters) {
+std::string UISystem::openFileDialog(std::vector<std::string> const &filters) {
     return OpenFileDialog(mWindow, filters);
 }
 

@@ -99,8 +99,11 @@ void UIExplorer::draw() {
         }
 
         if (action == ProjectAction::AddExisting) {
-            std::string filePath = UISystem::get().openFileDialog("C++ Source File (*.cpp;*.cxx)\0*.cpp;*.cxx\0C++ Header File (*.h)\0*.h\0"
-                                     "All Files (*.*)\0*.*\0");
+            std::string filePath = UISystem::get().openFileDialog({
+                                    "C++ Source File (*.cpp;*.cxx)", "*.cpp *.cxx", 
+                                    "C++ Header File (*.h)", "*.h",
+                                    "All Files (*.*)", "*.*"
+                                 });
             if (!filePath.empty()) {
                 PaperCode::get().executeCommand(Commands::AddExistingFile, {.FilePath = filePath});
             }

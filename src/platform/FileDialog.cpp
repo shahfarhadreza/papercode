@@ -1,64 +1,20 @@
 #include <string>
 #include <GLFW/glfw3.h>
 
-#if defined(WIN32)
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
-#include <windows.h>
-#include <commdlg.h>
-std::string OpenFileDialog(GLFWwindow* window, const char* filters) {
-    OPENFILENAMEA ofn;
-    CHAR szFile[260] = { 0 };
-    CHAR currentDir[256] = { 0 };
-    ZeroMemory(&ofn, sizeof(OPENFILENAME));
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.hwndOwner = glfwGetWin32Window(window);
-    ofn.lpstrFile = szFile;
-    ofn.nMaxFile = sizeof(szFile);
-    if (GetCurrentDirectoryA(256, currentDir))
-        ofn.lpstrInitialDir = currentDir;
-    ofn.lpstrFilter = filters;
-    ofn.nFilterIndex = 1;
-    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+#include <pfd/portable-file-dialogs.h>
 
-    if (GetOpenFileNameA(&ofn) == TRUE)
-        return ofn.lpstrFile;
-
+// TODO: Multiple files open/add
+std::string OpenFileDialog(GLFWwindow* window, std::vector<std::string> const &filters) {
+    // File open
+    auto f = pfd::open_file("Open", pfd::path::home(), filters);
+    if (!f.result().empty()) {
+        return f.result()[0];
+    }
     return std::string();
 }
 
-std::string SaveFileDialog(GLFWwindow* window, const char* filters) {
-    OPENFILENAMEA ofn;
-    CHAR szFile[260] = { 0 };
-    CHAR currentDir[256] = { 0 };
-    ZeroMemory(&ofn, sizeof(OPENFILENAME));
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.hwndOwner = glfwGetWin32Window(window);
-    ofn.lpstrFile = szFile;
-    ofn.nMaxFile = sizeof(szFile);
-    if (GetCurrentDirectoryA(256, currentDir))
-        ofn.lpstrInitialDir = currentDir;
-    ofn.lpstrFilter = filters;
-    ofn.nFilterIndex = 1;
-    ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
-
-    // Sets the default extension by extracting it from the filter
-    ofn.lpstrDefExt = strchr(filters, '\0') + 1;
-
-    if (GetSaveFileNameA(&ofn) == TRUE)
-        return ofn.lpstrFile;
-
-    return std::string();
+std::string SaveFileDialog(GLFWwindow* window, const std::string& filepath, std::vector<std::string> const &filters) {
+    auto f = pfd::save_file("Save as", filepath, filters);
+    return f.result();
 }
-
-#elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
-
-std::string OpenFileDialog(GLFWwindow* window, const char* filters) {
-}
-
-std::string SaveFileDialog(GLFWwindow* window, const char* filters) {
-}
-#else
-    #error port to this platform
-#endif
 

@@ -68,7 +68,7 @@ endif()
 
 add_subdirectory(vendors/glfw)
 add_subdirectory(vendors/yaml-cpp)
-add_subdirectory(vendors/pfd)
+add_subdirectory(vendors/pfd) 
 
 target_include_directories(core PUBLIC vendors/yaml-cpp/include)
 target_link_libraries( core yaml-cpp )
@@ -81,7 +81,6 @@ target_include_directories(papercode PUBLIC vendors/imgui)
 target_link_libraries( papercode ${OPENGL_LIBRARIES} )
 target_link_libraries( papercode glfw )
 target_link_libraries( papercode core)
-target_link_libraries( papercode pfd)
 
 if (WIN32)
 target_link_options( papercode PUBLIC "-Wl,--subsystem,windows" )
