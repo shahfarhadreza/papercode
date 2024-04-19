@@ -214,12 +214,15 @@ public:
     SubProcessPosix()
         : pid(-1)
         , running(false)
-        , exitCode(-1)
-    {
+        , exitCode(-1) {
         // Initialize pipes
         if (pipe(outputPipe) == -1) {
             std::cerr << "Failed to create output pipe" << std::endl;
         }
+    }
+
+    ~SubProcessPosix() {
+        terminate();
     }
 
     void cleanUp() override {
