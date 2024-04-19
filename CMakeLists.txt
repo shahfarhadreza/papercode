@@ -77,11 +77,12 @@ target_include_directories(papercode PUBLIC src)
 target_include_directories(papercode PUBLIC src/platform)
 target_include_directories(papercode PUBLIC vendors)
 target_include_directories(papercode PUBLIC vendors/imgui)
+target_include_directories(papercode PUBLIC vendors/pdf)
+
 
 target_link_libraries( papercode ${OPENGL_LIBRARIES} )
 target_link_libraries( papercode glfw )
 target_link_libraries( papercode core)
-target_link_libraries( papercode pfd)
 
 if (WIN32)
 target_link_options( papercode PUBLIC "-Wl,--subsystem,windows" )
