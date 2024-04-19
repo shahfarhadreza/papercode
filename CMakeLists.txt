@@ -74,10 +74,11 @@ target_include_directories(papercode PUBLIC vendors/imgui)
 
 target_link_libraries( papercode ${OPENGL_LIBRARIES} )
 target_link_libraries( papercode glfw )
-
 target_link_libraries( papercode core)
 
+if (WIN32)
 target_link_options( papercode PUBLIC "-Wl,--subsystem,windows" )
+endif()
 
 
 
