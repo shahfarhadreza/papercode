@@ -2,28 +2,25 @@
 #include "PaperCode.h"
 #include "ImGuiHelper.h"
 
+std::string GetHomeDirectory();
+
 void UINewProject::open() {
     mDesc.mName = "HelloWorld";
 
-    char* pUserDir = std::getenv("USERPROFILE");
+    std::filesystem::path defaultProjectDir = GetHomeDirectory();
 
-    if (pUserDir != nullptr) {
+    std::cout << "LOG: Home directory: " << defaultProjectDir << std::endl;
 
-        std::filesystem::path defaultProjectDir = std::string(pUserDir);
+    defaultProjectDir.append("PaperCode");
+    defaultProjectDir.append(mDesc.mName);
 
-        defaultProjectDir.append("PaperCode");
-        defaultProjectDir.append(mDesc.mName);
+    mDirectory = defaultProjectDir;
 
-        mDirectory = defaultProjectDir;
+    // TODO: Add support for path variables ${PROJECTDIR} etc. (Maybe use Regex to implement it)
+    mDesc.mObjPath = "./obj";
+    mDesc.mBinPath = "./bin";
 
-        // TODO: Add support for path variables ${PROJECTDIR} etc. (Maybe use Regex to implement it)
-        mDesc.mObjPath = ".\\obj";
-        mDesc.mBinPath = ".\\bin";
-
-        ImGui::OpenPopup("New Project");
-    } else {
-        std::cout << "CRITICAL ERROR: Could not find default project location" << std::endl;
-    }
+    ImGui::OpenPopup("New Project");
 }
 
 void UINewProject::close() {
