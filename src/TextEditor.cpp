@@ -383,13 +383,13 @@ TextEditor::Coordinates TextEditor::FindWordStart(const Coordinates & aFrom) con
 
 	auto& line = mLines[at.mLine];
 	auto cindex = GetCharacterIndex(at);
-
+/*
 	if ( cindex == (int)line.size()) {
 		// probably cursor is at the end of the line
 		// lets goto one index prev
 		cindex--;
 	}
-
+*/
 	if (cindex >= (int)line.size()) {
 		return at;
 	}
@@ -397,29 +397,27 @@ TextEditor::Coordinates TextEditor::FindWordStart(const Coordinates & aFrom) con
 	while (cindex > 0 && isspace(line[cindex].mChar))
 		--cindex;
 
-	/* REZA
 	auto cstart = (PaletteIndex)line[cindex].mColorIndex;
-	*/
 
 	while (cindex > 0)
 	{
 		auto c = line[cindex].mChar;
-		printf("found c %c\n", c);
+
 		if ((c & 0xC0) != 0x80)	// not UTF code sequence 10xxxxxx
 		{
+			/*
 			if (!isalpha(c)) {
 				cindex++;
 				break;
 			}
+			*/
 			if (c <= 32 && isspace(c))
 			{
 				cindex++;
 				break;
 			}
-			/* REZA
 			if (cstart != (PaletteIndex)line[size_t(cindex - 1)].mColorIndex)
 				break;
-			*/
 		}
 		--cindex;
 	}
@@ -439,22 +437,22 @@ TextEditor::Coordinates TextEditor::FindWordEnd(const Coordinates & aFrom) const
 		return at;
 
 	bool prevspace = (bool)isspace(line[cindex].mChar);
-	/* REZA
+
 	auto cstart = (PaletteIndex)line[cindex].mColorIndex;
-	*/
+
 	while (cindex < (int)line.size())
 	{
 		auto c = line[cindex].mChar;
 		auto d = UTF8CharLength(c);
-		/* REZA
+
 		if (cstart != (PaletteIndex)line[cindex].mColorIndex)
 			break;
-		*/
+/*
 		if (!isalpha(c)) {
 			cindex--;
 			break;
 		}
-
+*/
 		if (prevspace != !!isspace(c))
 		{
 			if (isspace(c))
