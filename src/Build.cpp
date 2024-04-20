@@ -42,26 +42,20 @@ void PaperCode::runProject() {
 
         bool pauseAfterExecution = true;
 
+#if defined(WIN32)
         if (buildOption.mSubSystem != BuildSubSystem::GUI) {
             if (pauseAfterExecution) {
                 cmd = std::format(".\\console-exec.exe {}", exeFile);
             }
         }
-
+#endif
         mUISystem.clearBuildLogs();
         mUISystem.appendBuildLog("Executing: " + cmd + "\r\n");
 
         if (!mChildProcess->create(cmd, SubProcessFlags::CreateConsole)) {
             mUISystem.appendBuildLog(std::format("Failed to execute command '{}'\r\n", cmd), LogType::Error);
         } else {
-/*
-            const DWORD result = mChildProcess->wait();
-            if (result != WAIT_OBJECT_0) {
-                // Timed out or an error occurred
-                mUISystem.appendBuildLog("Failed to wait for process to finish\r\n", LogType::Error);
-            }
-*/
-
+            
             while(1) {
                 int exitCode;
                 if (mChildProcess->getExitCode(&exitCode)) {

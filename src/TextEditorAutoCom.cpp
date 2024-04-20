@@ -124,8 +124,8 @@ void TextEditor::RenderAutoComplete(const ImVec2& aPosition) {
     		mMouseOverAutoComplete = false;
     	}
     	int idx = 0;
+    	bool close = false;
     	for (auto& v : mAutoCompleteList) {
-
 
     		bool isIndexActive = idx == mAutoCompleteBestMatchIndex;
 
@@ -137,18 +137,10 @@ void TextEditor::RenderAutoComplete(const ImVec2& aPosition) {
 
 	        ImGui::PushID(idx);
 	    	if (ImGui::Selectable(v.c_str(), isIndexActive)) {
-
 	    		mAutoCompleteBestMatchIndex = idx;
-
-	    		AcceptAutoComplete();
-	    		ImGui::PopID();
-
-	    		if (isIndexActive) {
-	    			ImGui::PopStyleColor(1);
-	    		}
-	    		break;
+	    		close = true;
 	    	}
-	    	ImGui::PopID();
+	    	ImGui::PopID(); 
 	    	idx++;
 
 	    	if (isIndexActive) {
@@ -159,6 +151,13 @@ void TextEditor::RenderAutoComplete(const ImVec2& aPosition) {
 	            }
 	            ImGui::PopStyleColor(1);
 	    	}
+	    	if (close) {
+	    		break;
+	    	}
+	    }
+
+	    if (close) {
+	    	AcceptAutoComplete();
 	    }
     }
 

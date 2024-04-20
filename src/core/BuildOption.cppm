@@ -73,7 +73,16 @@ export struct BuildOption {
     BuildSubSystem mSubSystem = BuildSubSystem::Console;
     BuildLanguageStandard mLanguageStandard = BuildLanguageStandard::CPP11;
     BuildType mType = BuildType::Executable;
+
+#if defined(WIN32)
     BuildPlatform mPlatform = BuildPlatform::Windows;
+#elif defined (__unix__)
+    BuildPlatform mPlatform = BuildPlatform::Linux;
+#elif (defined (__APPLE__) && defined (__MACH__))
+    BuildPlatform mPlatform = BuildPlatform::MacOS;
+#else
+    #error port to this platform
+#endif
 
     std::string mAdditionalCompileFlags = "";
     std::string mAdditionalLinkFlags = "";
