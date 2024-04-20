@@ -343,6 +343,7 @@ private:
 	void EnterCharacter(ImWchar aChar, bool aShift);
 	void Backspace();
 	void DeleteSelection();
+	void ReplaceRange(const std::string& replaceWith, const Coordinates& aStart, const Coordinates& aEnd);
 	std::string GetWordUnderCursor() const;
 	std::string GetWordAt(const Coordinates& aCoords) const;
 	ImU32 GetGlyphColor(const Glyph& aGlyph) const;
@@ -354,6 +355,11 @@ private:
 	void ResetAutoComplete();
 	void StartAutoComplete(const Coordinates& pos);
 	void RenderAutoComplete(const ImVec2& aPosition);
+	void AcceptAutoComplete();
+
+	Coordinates FindWordStartAutoComplete(const Coordinates& aFrom) const;
+	Coordinates FindWordEndAutoComplete(const Coordinates& aFrom) const;
+	std::string GetWordForAutoComplete(const Coordinates& aCoords);
 
 	float mLineSpacing;
 	Lines mLines;
@@ -382,9 +388,12 @@ private:
 	bool mShowAutoComplete = false;
 	bool mMouseOverAutoComplete = false;
 	bool mAutoCompleteSelectionChanged = false;
-	Coordinates mAutoCompleteCoord;
 	ImVec2 mAutoCompletePos;
 	std::string mAutoCompleteWord;
+	Coordinates mAutoCompleteWordStart;
+	Coordinates mAutoCompleteWordEnd;
+	bool mFocusBack = false;
+
 	std::vector<std::string> mAutoCompleteList;
 	int mAutoCompleteBestMatchIndex = -1;
 

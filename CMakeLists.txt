@@ -47,6 +47,7 @@ set( SRCS
     src/GLFWHelper.cpp
     src/ImGuiHelper.cpp
     src/TextEditor.cpp
+    src/TextEditorAutoCom.cpp
     src/platform/FileDialog.cpp 
     src/platform/glad/glad.c
     src/platform/glad/glad.h

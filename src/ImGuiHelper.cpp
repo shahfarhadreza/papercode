@@ -122,8 +122,8 @@ void ImGuiSetTheme()  {
 
     style.TabRounding = 3.0f;
 
-	style.ScrollbarSize = 10;
-	style.ScrollbarRounding = 15;
+	style.ScrollbarSize = 14;
+	style.ScrollbarRounding = 10;
 	style.PopupBorderSize = 0;
 
     style.FrameBorderSize = 1;
@@ -137,15 +137,17 @@ void ImGuiSetTheme()  {
 	style.Colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
 	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
 	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.23f, 0.23f, 0.23f, 1.00f);
-	style.Colors[ImGuiCol_Header] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-	style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.30f, 0.30f, 0.30f, 1.00f);
 
+	style.Colors[ImGuiCol_Header] = ImVec4(0.15f, 0.40f, 0.8f, 1.00f);
+    //style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+	
 	style.Colors[ImGuiCol_Button] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
 	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.25f, 0.25f, 0.32f, 1.00f);
 	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
 
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.135f, 0.14f, 0.135f, 1.00f);
 	style.Colors[ImGuiCol_FrameBg] = ImVec4(0.09f, 0.09f, 0.09f, 1.f);
+
 	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.15f, 0.15f, 0.15f, 1.f);
 	style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
 	style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
