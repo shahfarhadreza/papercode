@@ -48,9 +48,9 @@ public:
     virtual bool create(const std::string& cmd, SubProcessFlags flags) = 0;
     virtual void read(std::function<void(const std::string&)> cb) = 0;
     virtual void terminate() = 0;
-    virtual bool isAlive() const = 0;
-    virtual int getExitCode(int* pExitCode) const = 0;
-    virtual int wait() const = 0;
+    virtual bool isAlive() = 0;
+    virtual bool getExitCode(int *pExitCode) = 0;
+    virtual int wait() = 0;
 };
 
 #if defined(WIN32)
@@ -174,7 +174,7 @@ public:
         TerminateProcess(pi.hProcess, 0);
     }
 
-    bool isAlive() const {
+    bool isAlive() {
         if (pi.hProcess == nullptr) {
             return false;
         }
@@ -183,18 +183,18 @@ public:
         return exitCode == STILL_ACTIVE;
     }
 
-    int getExitCode(int* pExitCode) const {
+    bool getExitCode(int *pExitCode) {
         if (pi.hProcess == nullptr) {
-            return -1;
+            return false;
         }
         DWORD exitCode;
-        int ret = GetExitCodeProcess(pi.hProcess, &exitCode);
+        BOOL ret = GetExitCodeProcess(pi.hProcess, &exitCode);
         *pExitCode = exitCode;
         return ret;
     }
 
-    int wait() const {
-        return (int)WaitForSingleObject(pi.hProcess, INFINITE);
+    int wait() {
+        return (int) WaitForSingleObject(pi.hProcess, INFINITE); 
     }
 };
 
@@ -202,44 +202,149 @@ export using SubProcess = SubProcessWin32;
 
 #elif defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 
-export class SubProcessPosix : public ISubProcess
+#include <cstring>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+class SubProcessPosix : public ISubProcess
 {
 public:
-    SubProcessPosix() {
-
+    SubProcessPosix()
+        : pid(-1)
+        , running(false)
+        , exitCode(-1) {
+        // Initialize pipes
+        if (pipe(outputPipe) == -1) {
+            std::cerr << "Failed to create output pipe" << std::endl;
+        }
     }
 
     ~SubProcessPosix() {
-
+        terminate();
     }
 
-    virtual void cleanUp() override {
-
+    void cleanUp() override {
+        // Clean up any resources if needed
     }
 
-    virtual bool create(const std::string& cmd, SubProcessFlags flags) {
+    bool create(const std::string &cmd, SubProcessFlags flags) override {
+        std::vector<char *> args;
+        tokenize(cmd, args);
+        args.push_back(nullptr);
 
+        pid = fork();
+        if (pid == 0) {
+            // Child process
+            if (flags & SubProcessFlags::RedirectOutput) {
+                // Redirect stdout to the write end of the pipe
+                dup2(outputPipe[1], STDOUT_FILENO);
+            }
+            close(outputPipe[0]); // Close the read end of the pipe
+
+            if (execvp(args[0], args.data()) == -1) {
+                std::cerr << "Failed to execute command: " << cmd << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        } else if (pid > 0) {
+            // Parent process
+            running = true;
+            close(outputPipe[1]); // Close the write end of the pipe
+        } else {
+            // Fork failed
+            std::cerr << "Fork failed" << std::endl;
+            return false;
+        }
+        return true;
     }
-    virtual void read(std::function<void(const std::string&)> cb) {
 
+    void read(std::function<void(const std::string &)> cb) override {
+        if (!running) {
+            std::cerr << "Process is not running" << std::endl;
+            return;
+        }
+
+        char buffer[BUFSIZ];
+        ssize_t bytesRead;
+        while ((bytesRead = ::read(outputPipe[0], buffer, BUFSIZ)) > 0) {
+            std::string data(buffer, bytesRead);
+            cb(data);
+        }
+        if (bytesRead == -1) {
+            std::cerr << "Failed to read from pipe" << std::endl;
+        }
     }
 
-    virtual void terminate() {
-
+    void terminate() override {
+        if (running) {
+            kill(pid, SIGTERM);
+            running = false;
+        }
     }
 
-    virtual bool isAlive() const {
+    bool isAlive() override {
+        if (!running) {
+            return false;
+        }
 
+        int status;
+        if (waitpid(pid, &status, WNOHANG) == 0) {
+            return true;
+        } else {
+            running = false;
+            return false;
+        }
     }
 
-    virtual int getExitCode(int* pExitCode) const {
-
+    bool getExitCode(int *pExitCode) override {
+        if (isAlive()) {
+            return false;
+        }
+        if (exitCode != -1) {
+            *pExitCode = exitCode;
+            return true;
+        }
+        return false;
     }
-    virtual int wait() const {
 
+    int wait() override {
+        if (running) {
+            int status;
+            if (waitpid(pid, &status, 0) > 0) {
+                if (WIFEXITED(status)) {
+                    exitCode = WEXITSTATUS(status);
+                    return exitCode;
+                }
+            }
+        }
+        return -1;
+    }
+
+private:
+    pid_t pid;
+    bool running;
+    int exitCode;
+    int outputPipe[2]; // Pipe for reading subprocess output
+
+    void tokenize(const std::string &cmd, std::vector<char *> &args) {
+        // Simple tokenization function for demonstration
+        std::string token;
+        for (char c : cmd) {
+            if (c == ' ') {
+                if (!token.empty()) {
+                    args.push_back(strdup(token.c_str()));
+                    token.clear();
+                }
+            } else {
+                token += c;
+            }
+        }
+        if (!token.empty()) {
+            args.push_back(strdup(token.c_str()));
+        }
     }
 };
-
 export using SubProcess = SubProcessPosix;
 
 #else
