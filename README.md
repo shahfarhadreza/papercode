@@ -13,11 +13,13 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightni
 * Code Editing:
   - Syntax highlighting for C++ code.
   - Support for indentation and code formatting.
+  - Code Auto Completion (Keywords only).
+  - Intellisense (Work-in progress).
 * Project Management:
   - Ability to create and manage C++ projects with multiple files.
 * Other Features:
   - A customizable interface to suit different preferences (Work-in progress).
-  - Support for cross-platform development (Work-in progress).
+  - Support for cross-platform development (Tested on Windows & Linux Debian Only) - Still work in progress.
 
 # Download
 
