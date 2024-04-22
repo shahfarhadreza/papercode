@@ -1,5 +1,5 @@
 # Paper Code
-Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lighteight, fast C++ IDE built for performance-obsessed developers.
+Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightweight, fast C++ IDE built for performance-obsessed developers.
 
 ![preview](screenshots/02.png)
 
