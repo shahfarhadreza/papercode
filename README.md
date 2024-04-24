@@ -3,7 +3,7 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightwe
 
 ## Highlighting Feature
 
-### Intellisense and Code Auto Completion 
+### Intellisense and Code Auto Completion (Experimental)
 ![preview](screenshots/03.png)
 
 ## Preview 
@@ -20,8 +20,8 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightwe
 * Code Editing:
   - Syntax highlighting for C++ code.
   - Support for indentation and code formatting.
-  - Code Auto Completion (Keywords only).
-  - Intellisense (Work-in progress).
+  - Code Auto Completion.
+  - Intellisense (Experimental).
 * Project Management:
   - Ability to create and manage C++ projects with multiple files.
 * Other Features:
