@@ -1,6 +1,13 @@
 # Paper Code
 Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightweight, fast C++ IDE built for performance-obsessed developers.
 
+## Highlighting Feature
+
+### Intellisense and Code Auto Completion 
+![preview](screenshots/03.png)
+
+## Preview 
+
 ![preview](screenshots/02.png)
 
 # Focus on Performance
