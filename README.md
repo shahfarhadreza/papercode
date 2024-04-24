@@ -1,5 +1,12 @@
 # Paper Code
-Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightning-fast C++ IDE built for performance-obsessed developers.
+Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightweight, fast C++ IDE built for performance-obsessed developers.
+
+## Highlighting Feature
+
+### Intellisense and Code Auto Completion 
+![preview](screenshots/03.png)
+
+## Preview 
 
 ![preview](screenshots/02.png)
 
@@ -13,11 +20,13 @@ Tired of bloated IDEs that slow you down? Welcome to **Paper Code**, the lightni
 * Code Editing:
   - Syntax highlighting for C++ code.
   - Support for indentation and code formatting.
+  - Code Auto Completion (Keywords only).
+  - Intellisense (Work-in progress).
 * Project Management:
   - Ability to create and manage C++ projects with multiple files.
 * Other Features:
   - A customizable interface to suit different preferences (Work-in progress).
-  - Support for cross-platform development (Work-in progress).
+  - Support for cross-platform development (Tested on Windows & Linux Debian Only) - Still work in progress.
 
 # Download
 
