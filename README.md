@@ -91,6 +91,7 @@ the GNUMakefile generator will not work and you must use ninja.
 * STB
 * Yaml-Cpp
 * FontAwesome5
+* libclang
 
 # Contributing
 
