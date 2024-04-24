@@ -15,7 +15,6 @@
 #include <functional>
 #include <cctype>
 
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -25,4 +24,3 @@
 
 #include <font-awesome/IconsFontAwesome5.h>
 
-#include <TextEditor.h>

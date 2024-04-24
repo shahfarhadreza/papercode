@@ -248,6 +248,7 @@ struct UISystem {
     void drawToolbar();
 
     bool runEventLoop();
+    void handleKeyboardInputs();
     void terminate();
 
     void clearBuildLogs();
@@ -294,6 +295,8 @@ struct CommandData {
     std::string FileNewName = "";
 };
 
+struct SmartSense;
+
 /* Handles all the requests/commands/notifications between UI System and Manager
  */
 struct PaperCode {
@@ -303,6 +306,8 @@ struct PaperCode {
     std::jthread mBuildThread;
     std::jthread mRunThread;
     std::shared_ptr<SubProcess> mChildProcess = nullptr;
+
+    std::shared_ptr<SmartSense> mSmartSense = nullptr;
 
     PaperCode() = default;
     ~PaperCode() = default;
@@ -315,14 +320,9 @@ struct PaperCode {
         return instance;
     }
 
-    UISystem& getUI() {
-        return UISystem::get();
-    }
-
-    Manager& getManager() {
-        return Manager::get();
-    }
-
+    std::shared_ptr<SmartSense> getSmartSense() { return mSmartSense; }
+    UISystem& getUI() { return UISystem::get(); }
+    Manager& getManager() { return Manager::get(); }
     ProjectPtr getActiveProject() { return getManager().getActiveProject(); }
 
     bool init(const std::vector<std::string>& args);

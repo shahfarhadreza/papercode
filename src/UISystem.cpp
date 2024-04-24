@@ -9,6 +9,8 @@
 
 #include "ImGuiHelper.h"
 
+void drawSmartSenseState();
+
 std::string OpenFileDialog(GLFWwindow* window, std::vector<std::string> const &filters);
 bool glfwSetWindowCenter( GLFWwindow * window );
 
@@ -169,9 +171,24 @@ bool UISystem::runEventLoop() {
         drawEvent();
 	    glfwPollEvents();
 
+        handleKeyboardInputs();
+
         glfwSwapBuffers(mWindow);
 	}
     return true;
+}
+
+void UISystem::handleKeyboardInputs() {
+    ImGuiIO& io = ImGui::GetIO();
+    auto shift = io.KeyShift;
+    auto ctrl = io.ConfigMacOSXBehaviors ? io.KeySuper : io.KeyCtrl;
+    auto alt = io.ConfigMacOSXBehaviors ? io.KeyCtrl : io.KeyAlt;
+
+    io.WantCaptureKeyboard = true;
+
+    if (ctrl && !shift && !alt && ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_S))) {
+        PaperCode::get().executeCommand(Commands::SaveCurrent);
+    }
 }
 
 void UISystem::clearBuildLogs() {
@@ -362,6 +379,11 @@ void UISystem::drawUI() {
         UIEditorPtr editor = getEditorManager().getActiveEditor();
 
         if (editor) {
+
+            // Smart Sense state
+            drawSmartSenseState();
+
+            // Line and Column number
             ImGui::SameLine();
 
             std::string strLineColumn_ = std::format("Line: {}, Column: {}", editor->getLine(), editor->getColumn());

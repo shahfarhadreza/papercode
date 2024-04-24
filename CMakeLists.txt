@@ -57,15 +57,42 @@ set( SRCS
     vendors/imgui/imgui_widgets.cpp
     vendors/imgui/backends/imgui_impl_glfw.cpp
     vendors/imgui/backends/imgui_impl_opengl2.cpp
-    src/icon.rc
+    src/icon.rc 
     )
 
 add_executable( papercode ${SRCS} )
+
+set_source_files_properties(src/platform/glad/glad.c PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+
+target_sources(papercode
+    PUBLIC
+
+    FILE_SET CXX_MODULES FILES
+    src/smartsense/SmartSense.cppm
+    )
 
 if (WIN32)
 target_compile_definitions(papercode PUBLIC WIN32)
 target_compile_definitions(core PUBLIC WIN32)
 endif()
+
+target_precompile_headers(core
+  PRIVATE
+    <cstdlib>
+    <iostream>
+    <fstream>
+    <string>
+    <vector>
+    <memory> 
+    <filesystem>
+    <thread>
+    <unordered_map>
+    <map>
+    <functional>
+    <format>
+)
+
+target_precompile_headers(papercode REUSE_FROM core)
 
 add_subdirectory(vendors/glfw)
 add_subdirectory(vendors/yaml-cpp)
@@ -79,9 +106,13 @@ target_include_directories(papercode PUBLIC src/platform)
 target_include_directories(papercode PUBLIC vendors)
 target_include_directories(papercode PUBLIC vendors/imgui)
 
+target_include_directories(papercode PUBLIC ${libclang_DIR}/include)
+target_link_directories(papercode PUBLIC ${libclang_DIR}/lib)
+
 target_link_libraries( papercode ${OPENGL_LIBRARIES} )
 target_link_libraries( papercode glfw )
 target_link_libraries( papercode core)
+target_link_libraries( papercode libclang)
 
 if (WIN32)
 target_link_options( papercode PUBLIC "-Wl,--subsystem,windows" )

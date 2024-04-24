@@ -1,5 +1,4 @@
-#include <string>
-#include <GLFW/glfw3.h>
+#include "Stdafx.h"
 
 #include <pfd/portable-file-dialogs.h>
 

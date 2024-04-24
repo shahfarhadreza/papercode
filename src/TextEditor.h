@@ -10,6 +10,10 @@
 #include <regex>
 #include "imgui.h"
 
+struct SmartSymbol;
+
+import smartsense;
+
 class TextEditor
 {
 public:
@@ -180,9 +184,6 @@ public:
 		static const LanguageDefinition& HLSL();
 		static const LanguageDefinition& GLSL();
 		static const LanguageDefinition& C();
-		static const LanguageDefinition& SQL();
-		static const LanguageDefinition& AngelScript();
-		static const LanguageDefinition& Lua();
 	};
 
 	TextEditor();
@@ -352,13 +353,20 @@ private:
 	void HandleMouseInputs();
 	void Render();
 
+	enum class MemberAccess {
+		None,
+		Dot,
+		Pointer,
+		Resolution
+	};
+
 	void ResetAutoComplete();
-	void StartAutoComplete(const Coordinates& pos);
+	void StartAutoComplete(const Coordinates& pos, bool force = false);
 	void RenderAutoComplete(const ImVec2& aPosition);
 	void AcceptAutoComplete();
 
-	Coordinates FindWordStartAutoComplete(const Coordinates& aFrom) const;
-	Coordinates FindWordEndAutoComplete(const Coordinates& aFrom) const;
+	Coordinates FindWordStartAutoComplete(const Coordinates& aFrom);
+	Coordinates FindWordEndAutoComplete(const Coordinates& aFrom);
 	std::string GetWordForAutoComplete(const Coordinates& aCoords);
 
 	float mLineSpacing;
@@ -389,12 +397,13 @@ private:
 	bool mMouseOverAutoComplete = false;
 	bool mAutoCompleteSelectionChanged = false;
 	ImVec2 mAutoCompletePos;
+	MemberAccess mAutoCompleteAccess = MemberAccess::None;
 	std::string mAutoCompleteWord;
 	Coordinates mAutoCompleteWordStart;
 	Coordinates mAutoCompleteWordEnd;
 	bool mFocusBack = false;
 
-	std::vector<std::string> mAutoCompleteList;
+	std::vector<SmartCompletioResult> mAutoCompleteList;
 	int mAutoCompleteBestMatchIndex = -1;
 
 	Palette mPaletteBase;

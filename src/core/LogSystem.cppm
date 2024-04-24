@@ -6,7 +6,7 @@ module;
 export module logsystem;
 
 export enum class LogType {
-    General,
+    General, 
     Info,
     Warning,
     Error,

@@ -41,6 +41,9 @@ void PaperCode::closeProject() {
     if (mExecutionStatus != ExecutionStatus::None) {
         return;
     }
+    if (mSmartSense) {
+        mSmartSense = nullptr;
+    }
     getUI().getEditorManager().closeAllEditors();
     getManager().closeProject();
 }
@@ -69,6 +72,8 @@ void PaperCode::openAllFiles() {
     std::filesystem::current_path(old);
 }
 
+std::shared_ptr<SmartSense> newSmartSense();
+
 bool PaperCode::openProject(const std::string& filepath) {
     // Don't forget to close the current one (if has)
     closeProject();
@@ -84,6 +89,7 @@ bool PaperCode::openProject(const std::string& filepath) {
             });
         return false;
     }
+    mSmartSense = newSmartSense();
     return true;
 }
 
@@ -202,6 +208,9 @@ bool PaperCode::run() {
 bool PaperCode::terminate() {
     std::cout << "LOG: app terminating..." << std::endl;
     mExecutionStatus = ExecutionStatus::None;
+    if (mSmartSense) {
+        mSmartSense = nullptr;
+    }
     mSettings.serialize();
     getUI().terminate();
     return true;

@@ -8,7 +8,7 @@ module;
 #include <filesystem>
 #include <yaml-cpp/yaml.h>
 
-export module settings;
+export module settings; 
 
 export struct Recent {
     std::string filepath;

@@ -3,6 +3,8 @@
 #include "TextEditor.h"
 #include "ImGuiHelper.h"
 
+void notifySmartSense(const std::string& filepath, const std::string& buf);
+
 void UIEditorManager::saveActive() {
 	if (mActiveEditor) {
 		mActiveEditor->saveToFile();
@@ -147,6 +149,8 @@ void UIEditorManager::draw() {
 
                 ImGuiTabItemFlags tab_flags = 0;
 
+                bool textModified = false;
+
                 if (e->mImEditor->IsTextChanged()) {
                     if (e->mFirstLoaded == true) {
                         //e.mProjectFile->setModified(false);
@@ -155,6 +159,7 @@ void UIEditorManager::draw() {
                     } else {
                         e->setModified(true);
                     }
+                    textModified = true;
                 }
                 title = e->getFileName();
 
@@ -193,6 +198,13 @@ void UIEditorManager::draw() {
                     e->mImEditor->Render("TextEditor");
                     //ImGui::End();
                     ImGui::EndTabItem();
+                }
+
+                // Lets notify the smart sense that codes has been modified
+                // Since the code might not be saved to a file yet. We will also
+                // provide the editor's full text buffer to parse
+                if (textModified) {
+                    notifySmartSense(e->getFilePath().string(), e->mImEditor->GetText());
                 }
                 n++;
             }

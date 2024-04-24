@@ -128,7 +128,8 @@ void ImGuiSetTheme()  {
 
     style.FrameBorderSize = 1;
 	style.FrameRounding = 3.0f;
-
+    style.FramePadding = ImVec2(5, 5);
+    //style.ItemSpacing = ImVec2(8, 6);
     
 
 	style.Colors[ImGuiCol_Separator] = ImVec4(0.01f, 0.01f, 0.01f, 1.00f);
